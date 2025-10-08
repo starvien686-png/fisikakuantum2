@@ -36,30 +36,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 🎵 Background Music (Universal Version) ---
     // Fungsi untuk memulai musik
     function playMusic() {
-    if (backgroundMusic.paused) {
-        backgroundMusic.src = "happy-birthday-on-piano-121400.mp3";
-        backgroundMusic.volume = 0.5; // biar lembut dan nggak kaget
-        backgroundMusic.play().catch((e) => {
-            console.warn("Autoplay blocked. User interaction required:", e);
-        });
+        if (backgroundMusic.paused) {
+            backgroundMusic.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y";
+            backgroundMusic.volume = 0.5; // biar lembut dan nggak kaget
+            backgroundMusic.play().catch(e => {
+                console.warn("Autoplay audio blocked, trying YouTube iframe:", e);
+                // If audio tag fails, try to un-mute/play iframe
+                const iframe = youtubeAudioPlayer.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y&controls=0"; // Remove mute=1
+                    youtubeAudioPlayer.style.display = 'block'; // Make iframe visible if needed
+                }
+            });
+        }
     }
-}
 
-    // Fungsi untuk pause musik
-function pauseMusic() {
-    if (!backgroundMusic.paused) {
+    function pauseMusic() {
         backgroundMusic.pause();
+        const iframe = youtubeAudioPlayer.querySelector('iframe');
+        if (iframe) {
+            // This stops YouTube iframe by effectively resetting its source
+            // A more robust way would be using YouTube Iframe API to pause
+            iframe.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=0&loop=1&playlist=vNCDAvLxy_Y&controls=0&mute=1";
+        }
     }
-}
 
-    // Fungsi untuk lanjutkan musik
-function resumeMusic() {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play().catch((e) => {
-            console.warn("Autoplay blocked. User interaction required:", e);
-        });
+    function resumeMusic() {
+        playMusic(); // Simply call playMusic, it will handle if already playing
     }
-}
 
     // (Optional) jalankan otomatis setelah halaman selesai load
     window.addEventListener("load", () => {
