@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Handlee&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Music -->
+    <!-- 🎵 Background Music (Free Piano Loop) -->
+<audio id="background-music" autoplay loop>
+  <source src="happy-birthday-on-piano-121400.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+
+    <!-- Splash Slide -->
+    <div id="splash-slide" class="slide active">
+        <div class="confetti-container"></div>
+        <h1>Happy Birthday!</h1>
+        <button id="start-button">Start</button>
+    </div>
+
+    <!-- Cake Slide -->
+    <div id="cake-slide" class="slide">
+        <h2>Make a Wish!</h2>
+        <div class="cake-container">
+            <div class="cake-layer layer-3"></div>
+            <div class="cake-cream cream-3"></div>
+            <div class="cake-layer layer-2"></div>
+            <div class="cake-cream cream-2"></div>
+            <div class="cake-layer layer-1"></div>
+            <div class="cake-cream cream-1"></div>
+            <div class="candle candle-2">
+                <div class="flame"></div>
+            </div>
+            <div class="candle candle-0">
+                <div class="flame"></div>
+            </div>
+        </div>
+        <p>Blow into your microphone to extinguish the candles!</p>
+        <button id="blow-candle-button">Enable Blowing</button>
+        <p id="speech-status"></p>
+        <button id="next-from-cake" class="hidden">Next</button>
+    </div>
+
+
+    <!-- Envelope Slide -->
+    <div id="envelope-slide" class="slide">
+        <div class="envelope-container">
+            <!-- Updated img src for the envelope -->
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExemV1eWpkd2NvMzRiZTM1YzRjdGZjemZ5bmtobDQ5d3pjZXpiYnk5NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKAn8Z3ofXv52fK/giphy.gif" alt="Envelope" class="envelope-img">
+            <div class="envelope-stamp"></div> <!-- Stamp will be part of the image now -->
+            <p class="envelope-question">Can you help me to open it?</p>
+            <div class="envelope-buttons">
+                <button id="yes-button" class="btn-yes">Yes</button>
+                <button id="no-button" class="btn-no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejection Slide -->
+    <div id="rejection-slide" class="slide">
+        <!-- Updated img src for the crying face -->
+        <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bmNsOW1kcWFqdXprcDl6YTdyYzcxaHN6bmhzMDVteHNhMWduM3JxcSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/x9OCxR2VdgaKDSeJev/giphy.gif" alt="Crying Face" class="crying-img">
+        <p class="rejection-text">Njir!? Ditolak lagi... Parah Banget Lu!?</p>
+        <button id="try-again-button">Try Again</button>
+    </div>
+
+    <!-- Letter Slide -->
+    <div id="letter-slide" class="slide">
+        <div class="sakura-static sakura-1">🌸</div>
+        <div class="sakura-static sakura-2">🌸</div>
+        <div class="letter-card">
+            <div class="card-header">
+                <span class="flower cherry-blossom">🌸</span>
+                <span class="flower rose">🌹</span>
+                <span class="cute-animation">✨</span>
+            </div>
+            <h3>Happy Birthday!</h3>
+            <p class="birthday-message">
+                Selamat ulang tahun! Semoga hari ini penuh kebahagiaan, tawa, dan semua impianmu menjadi kenyataan.
+                Nikmati setiap momen dan rayakan dirimu yang luar biasa!
+                Semoga selalu diberkahi kesehatan, kesuksesan, dan cinta. 🎉🎂
+            </p>
+            <button id="close-letter-button">Close Letter</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
