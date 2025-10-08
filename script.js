@@ -34,11 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 🎵 Background Music (Universal Version) ---
-    // Fungsi untuk memulai musik
+    // --- Background Music ---
     function playMusic() {
         if (backgroundMusic.paused) {
             backgroundMusic.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y";
-            backgroundMusic.volume = 0.5; // biar lembut dan nggak kaget
             backgroundMusic.play().catch(e => {
                 console.warn("Autoplay audio blocked, trying YouTube iframe:", e);
                 // If audio tag fails, try to un-mute/play iframe
@@ -64,11 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function resumeMusic() {
         playMusic(); // Simply call playMusic, it will handle if already playing
     }
-
-    // (Optional) jalankan otomatis setelah halaman selesai load
-    window.addEventListener("load", () => {
-    playMusic();
-});
 
 
     // --- Confetti Animation ---
