@@ -10,10 +10,14 @@
 <body>
     <!-- Background Music -->
     <!-- 🎵 Background Music (Free Piano Loop) -->
-<audio id="background-music" autoplay loop>
-  <source src="happy-birthday-on-piano-121400.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+<audio id="background-music" loop>
+        <source src="https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y" type="audio/mp4">
+        Your browser does not support the audio element.
+    </audio>
+    <!-- YouTube iframe for more robust autoplay attempt, will be unmuted by JS on user interaction -->
+    <div id="youtube-audio-player" style="display:none;">
+        <iframe width="0" height="0" src="https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y&controls=0&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
 
 
     <!-- Splash Slide -->
