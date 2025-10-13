@@ -1,13 +1,36 @@
+/* Palet Warna */
+:root {
+    --bone: #E5D7C4;
+    --tan: #CFBB99;
+    --moss-green: #889063;
+    --kombu-green: #354024;
+    --cafe-noir: #4C3D19;
+    --red-cherry: crimson; /* Menggunakan crimson sesuai permintaan */
+}
+
+/* Font Import (Alternatif Notera) */
+/* Jika Anda memiliki Notera, gunakan @font-face ini dan ganti URL */
+/*
+@font-face {
+    font-family: 'Notera';
+    src: url('path/to/Notera.woff2') format('woff2'),
+         url('path/to/Notera.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+*/
+/* Alternatif Google Fonts */
+
 body {
     margin: 0;
-    font-family: 'Handlee', cursive;
-    background-color: #FFE5EC; /* Light Pink Background */
+    font-family: "Indie Flower", cursive;
+    background-color: var(--bone); 
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     overflow: hidden; /* Hide overflow for confetti and animations */
-    color: #333;
+    color: var(--cafe-noir);
     text-align: center;
 }
 
@@ -41,8 +64,8 @@ button {
     margin: 10px;
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: 'Pacifico', cursive;
-    color: white;
+    font-family: "Gowun Dodum", sans-serif;
+    color: var(--moss-green);
 }
 
 button:hover {
@@ -52,15 +75,15 @@ button:hover {
 
 /* Splash Slide */
 #splash-slide h1 {
-    font-family: 'Pacifico', cursive;
+    font-family: "Gowun Dodum", sans-serif;
     font-size: 4em;
-    color: #FF69B4; /* Hot Pink */
+    color: var(--kombu-green); 
     margin-bottom: 30px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #splash-slide #start-button {
-    background-color: #FF69B4;
+    background-color: var(--moss-green);
 }
 
 /* Confetti Effect */
@@ -102,91 +125,14 @@ button:hover {
 
 
 /* Cake Slide */
-#cake-slide {
-    background-color: #FFFAF0; /* Ivory background for cake slide */
-}
-
-#cake-slide h2 {
-    font-family: 'Pacifico', cursive;
-    font-size: 3em;
-    color: #D2691E; /* Chocolate brown */
-    margin-bottom: 50px;
-}
-
-.cake-container {
-    position: relative;
-    width: 250px;
-    height: 250px; /* Adjust height based on layers */
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.cake-layer, .cake-cream {
+#cake-slide 
+.background{
     position: absolute;
-    width: 250px;
-    height: 40px;
-    border-radius: 50% / 15px; /* Elliptical top/bottom */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-500px); /* Start above */
-    opacity: 0;
-    animation-fill-mode: forwards;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
-
-.cake-layer { background-color: #8B4513; /* Chocolate */ z-index: 10; }
-.cake-cream { background-color: #F5DEB3; /* Cream */ z-index: 11; }
-
-.cake-layer.layer-1 { bottom: 0; animation: drop-cake-layer 0.8s ease-out 0.5s forwards; }
-.cake-cream.cream-1 { bottom: 30px; animation: drop-cake-layer 0.8s ease-out 0.7s forwards; }
-.cake-layer.layer-2 { bottom: 60px; animation: drop-cake-layer 0.8s ease-out 0.9s forwards; }
-.cake-cream.cream-2 { bottom: 90px; animation: drop-cake-layer 0.8s ease-out 1.1s forwards; }
-.cake-layer.layer-3 { bottom: 120px; animation: drop-cake-layer 0.8s ease-out 1.3s forwards; }
-.cake-cream.cream-3 { bottom: 150px; animation: drop-cake-layer 0.8s ease-out 1.5s forwards; }
-
-@keyframes drop-cake-layer {
-    0% { transform: translateY(-500px); opacity: 0; }
-    80% { transform: translateY(0px); opacity: 1; }
-    100% { transform: translateY(0px); opacity: 1; }
-}
-
-
-.candle {
-    position: absolute;
-    width: 20px;
-    height: 50px;
-    background-color: #F08080; /* Light coral */
-    border-radius: 5px;
-    z-index: 12;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-    transform: translateY(-500px); /* Start above */
-    opacity: 0;
-    animation-fill-mode: forwards;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 5px;
-    font-family: 'Pacifico', cursive;
-    color: #fff;
-    font-size: 1.5em;
-    text-align: center;
-}
-
-.candle-2 {
-    left: calc(50% - 50px);
-    bottom: 200px; /* Position on top cream */
-    animation: drop-cake-layer 0.8s ease-out 1.8s forwards; /* Reusing drop animation */
-}
-
-.candle-0 {
-    left: calc(50% + 20px);
-    bottom: 200px; /* Position on top cream */
-    animation: drop-cake-layer 0.8s ease-out 2s forwards; /* Reusing drop animation */
-}
-
-.candle-2::before { content: '2'; }
-.candle-0::before { content: '0'; }
 
 .flame {
     width: 10px;
@@ -215,12 +161,12 @@ button:hover {
 }
 
 #cake-slide button {
-    background-color: #6A5ACD; /* Slate Blue */
+    background-color: var(--cafe-noir); /* Slate Blue */
     margin-top: 20px;
 }
 
 #cake-slide #next-from-cake {
-    background-color: #3CB371; /* Medium Sea Green */
+    background-color: var(--moss-green); 
 }
 
 .hidden {
@@ -234,10 +180,10 @@ button:hover {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background-color: #FFC0CB; /* Pink */
+    background-color: var(--kombu-green); /* Pink */
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border: 2px solid #FF69B4;
+    border: 2px solid var(--cafe-noir);
     max-width: 400px;
 }
 
@@ -266,7 +212,7 @@ button:hover {
 .envelope-question {
     font-family: 'Pacifico', cursive;
     font-size: 1.8em;
-    color: #8B4513;
+    color: var(--tan);
     margin-top: 15px;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
@@ -278,11 +224,11 @@ button:hover {
 }
 
 .btn-yes {
-    background-color: #3CB371; /* Green */
+    background-color: var(--moss-green); /* Green */
 }
 
 .btn-no {
-    background-color: #FF69B4; /* Pink */
+    background-color: var(--red-cherry); /* Pink */
 }
 
 /* Rejection Slide */
@@ -293,7 +239,7 @@ button:hover {
 }
 
 #rejection-slide .rejection-text {
-    font-family: 'Pacifico', cursive;
+    font-family: "Gowun Dodum", sans-serif;
     font-size: 2.2em;
     color: #333;
     font-weight: bold;
@@ -303,18 +249,18 @@ button:hover {
 }
 
 #rejection-slide #try-again-button {
-    background-color: #FF4500; /* Orange Red */
+    background-color: var(--moss-green);
 }
 
 /* Letter Slide */
 #letter-slide {
-    background-color: #FFFAF0; /* Light cream background */
+    background-color: var(--moss-green); 
 }
 
 .letter-card {
     position: relative;
-    background-color: #fff;
-    border: 5px solid #FFC0CB; /* Pink border */
+    background-color: var(--bone);
+    border: 5px solid var(--cafe-noir); 
     border-radius: 20px;
     padding: 30px;
     max-width: 600px;
@@ -355,14 +301,14 @@ button:hover {
 }
 
 #letter-slide h3 {
-    font-family: 'Pacifico', cursive;
+    font-family: "Gowun Dodum", sans-serif;
     font-size: 2.5em;
-    color: #FF69B4;
+    color: var(--tan);
     margin-bottom: 20px;
 }
 
 .birthday-message {
-    font-family: 'Handlee', cursive;
+    font-family: "Poiret One", sans-serif;
     font-size: 1.2em;
     line-height: 1.6;
     color: #555;
@@ -372,7 +318,7 @@ button:hover {
 }
 
 #close-letter-button {
-    background-color: #FF69B4;
+    background-color: var(--kombu-green);
     margin-top: 30px;
 }
 
