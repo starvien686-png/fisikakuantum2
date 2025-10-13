@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 🎵 Background Music (Universal Version) ---
-    // --- Background Music ---
     function playMusic() {
         if (backgroundMusic.paused) {
             backgroundMusic.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y";
@@ -306,5 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // This is a common workaround for browser autoplay policies
     document.body.addEventListener('click', playMusic, { once: true });
     startButton.addEventListener('click', playMusic, { once: true });
+
 
 });
