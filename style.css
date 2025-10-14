@@ -126,7 +126,7 @@ button:hover {
 
 /* Cake Slide */
 #cake-slide 
-.background{
+.cake-slide{
     position: absolute;
     top: 0;
     left: 0;
