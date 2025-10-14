@@ -33,36 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSlide = slideToShow;
     }
 
-    // --- 🎵 Background Music (Universal Version) ---
+    // --- 🎵 Background Music ---
     function playMusic() {
         if (backgroundMusic.paused) {
-            backgroundMusic.src = "https://youtu.be/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y";
             backgroundMusic.play().catch(e => {
-                console.warn("Autoplay audio blocked, trying YouTube iframe:", e);
-                // If audio tag fails, try to un-mute/play iframe
-                const iframe = youtubeAudioPlayer.querySelector('iframe');
-                if (iframe) {
-                    iframe.src = "https://youtu.be/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y&controls=0"; // Remove mute=1
-                    youtubeAudioPlayer.style.display = 'block'; // Make iframe visible if needed
-                }
+                console.warn("Autoplay audio blocked:", e);
             });
         }
     }
 
     function pauseMusic() {
         backgroundMusic.pause();
-        const iframe = youtubeAudioPlayer.querySelector('iframe');
-        if (iframe) {
-            // This stops YouTube iframe by effectively resetting its source
-            // A more robust way would be using YouTube Iframe API to pause
-            iframe.src = "https://youtu.be/vNCDAvLxy_Y?autoplay=0&loop=1&playlist=vNCDAvLxy_Y&controls=0&mute=1";
-        }
     }
 
     function resumeMusic() {
-        playMusic(); // Simply call playMusic, it will handle if already playing
+        playMusic(); 
     }
-
 
     // --- Confetti Animation ---
     function createConfetti() {
@@ -92,15 +78,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     // --- Cake & Candle Animations ---
+    function animateCandles() {
+        candlesticks.forEach((candlestick, index) => {
+            // Apply initial position for animation
+            candlestick.style.transform = `translateY(-100px) rotate(${Math.random() * 20 - 10}deg)`;
+            candlestick.style.opacity = '0';
 
-        // Add '2' and '0' text to candles after they drop
-        const candle0 = document.querySelector('.candle-0');
-        setTimeout(() => {
-            // If you add CSS for .show-text
-            candle0.classList.add('show-text');
-        }, 2800); // After both candles should have dropped (2s delay + some buffer)
+            // Animate them falling into place with a slight delay
+            setTimeout(() => {
+                candlestick.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
+                candlestick.style.transform = 'translateY(0) rotate(0deg)';
+                candlestick.style.opacity = '1';
+
+                // After they've "dropped", show the text
+                setTimeout(() => {
+                    candlestick.classList.add('show-text');
+                }, 800); // After the drop animation
+            }, 500 * index); // Stagger the candle drop
+        });
     }
 
     function extinguishCandles() {
@@ -112,13 +108,28 @@ document.addEventListener('DOMContentLoaded', () => {
             speechStatus.textContent = "Candles extinguished! Make a wish! ✨";
             nextFromCakeButton.classList.remove('hidden');
             if (recognition) {
-                recognition.stop();
+                recognition.stop(); // Stop speech recognition
             }
-            if (audioContext) { // Cleanup audio context immediately after candles are out
-                audioContext.close();
-                audioContext = null;
-            }
+            cleanupAudioContext(); // Clean up audio context
             resumeMusic(); // Resume music after blowing is done
+        }
+    }
+
+    function cleanupAudioContext() {
+        if (scriptProcessor) {
+            scriptProcessor.disconnect();
+            scriptProcessor.onaudioprocess = null;
+            scriptProcessor = null;
+        }
+        if (mediaStreamSource) {
+            mediaStreamSource.disconnect();
+            mediaStreamSource = null;
+        }
+        if (audioContext) {
+            audioContext.close().then(() => {
+                audioContext = null;
+                console.log("AudioContext closed.");
+            }).catch(e => console.error("Error closing AudioContext:", e));
         }
     }
 
@@ -138,10 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         recognition.interimResults = true; // Get results as they come in
         recognition.lang = 'en-US';
 
-        let microphone;
         let analyser;
-        let javascriptNode;
-
+        
         recognition.onstart = () => {
             speechStatus.textContent = "Listening for a blow... 🌬️ (Grant microphone permission)";
             isBlowingEnabled = true;
@@ -151,17 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 navigator.mediaDevices.getUserMedia({ audio: true })
                     .then(stream => {
-                        microphone = audioContext.createMediaStreamSource(stream);
+                        mediaStreamSource = audioContext.createMediaStreamSource(stream);
                         analyser = audioContext.createAnalyser();
                         analyser.smoothingTimeConstant = 0.3;
                         analyser.fftSize = 1024;
-                        microphone.connect(analyser);
+                        mediaStreamSource.connect(analyser);
 
-                        javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
-                        analyser.connect(javascriptNode);
-                        javascriptNode.connect(audioContext.destination);
+                        scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+                        analyser.connect(scriptProcessor);
+                        scriptProcessor.connect(audioContext.destination);
 
-                        javascriptNode.onaudioprocess = () => {
+                        scriptProcessor.onaudioprocess = () => {
                             if (!isBlowingEnabled || candlesExtinguished) return;
 
                             const array = new Uint8Array(analyser.frequencyBinCount);
@@ -174,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             // console.log("Average volume:", average); // For debugging volume levels
 
-                            const BLOW_THRESHOLD = 60; // Adjust this value based on testing
+                            const BLOW_THRESHOLD = 70; // Adjust this value based on testing
                             if (average > BLOW_THRESHOLD) {
                                 extinguishCandles();
                             }
@@ -185,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         blowCandleButton.disabled = false; // Allow retrying
                         blowCandleButton.textContent = "Enable Blowing";
                         isBlowingEnabled = false;
-                        if (audioContext) audioContext.close(); // Clean up on error
+                        cleanupAudioContext(); // Clean up on error
                         resumeMusic(); // Resume music if microphone access fails
                     });
             } catch (e) {
@@ -198,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         recognition.onresult = (event) => {
             // We're primarily using the audio stream, not speech-to-text here
+            // You can add speech interpretation if needed, e.g., for "blow" command
         };
 
         recognition.onerror = (event) => {
@@ -206,8 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isBlowingEnabled = false;
             blowCandleButton.disabled = false;
             blowCandleButton.textContent = "Enable Blowing";
-            if (audioContext) audioContext.close();
-            audioContext = null;
+            cleanupAudioContext();
             resumeMusic(); // Resume music on recognition error
         };
 
@@ -218,10 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 blowCandleButton.disabled = false;
             }
             isBlowingEnabled = false;
-            if (audioContext) { // Ensure audio context is closed if not already
-                audioContext.close();
-                audioContext = null;
-            }
+            cleanupAudioContext(); // Ensure audio context is closed if not already
             if (!candlesExtinguished) { // Only resume if blowing didn't succeed
                 resumeMusic();
             }
@@ -236,9 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', () => {
         showSlide(cakeSlide);
         createConfetti();
-        // Play music immediately on start button click
-        playMusic();
-        animateCakeLayers();
+        playMusic(); // Play music immediately on start button click
+        animateCandles();
     });
 
     blowCandleButton.addEventListener('click', () => {
@@ -277,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             letterCard.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))';
 
             flames.forEach(flame => flame.classList.remove('extinguished'));
+            candlesticks.forEach(candlestick => candlestick.classList.remove('show-text'));
             candlesExtinguished = false;
             nextFromCakeButton.classList.add('hidden');
             speechStatus.textContent = "";
@@ -296,9 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
     createConfetti(); // Create confetti once on initial load
 
     // Add event listener for user interaction to attempt playing music
-    // This is a common workaround for browser autoplay policies
     document.body.addEventListener('click', playMusic, { once: true });
     startButton.addEventListener('click', playMusic, { once: true });
-
-
 });
