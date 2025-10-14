@@ -118,16 +118,21 @@ button:hover {
 
 /* Cake Slide */
 #cake-slide {
-    position: absolute; /* Needed for absolute positioning of spline-container */
+    position: relative;
+    overflow: hidden; /* Needed for absolute positioning of spline-container */
 }
 
-#cake-slide h2 {
+#cake-slide .cake-title {
+    position: absolute;
+    top: 15%; /* Atur posisi vertikal di atas kue */
+    left: 50%;
+    transform: translateX(-50%);
     font-family: "Gowun Dodum", sans-serif;
     font-size: 3em;
     color: var(--kombu-green);
-    margin-bottom: 20px;
-    position: relative; /* For z-index */
-    z-index: 3; /* Above spline */
+    z-index: 3; /* Pastikan di atas spline */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    margin: 0; /* Hapus margin default h2 */
 }
 
 .spline-container {
@@ -143,7 +148,7 @@ button:hover {
 spline-viewer {
     width: 100%;
     height: 100%;
-    transform: scale(1.2); /* Adjust scale as needed */
+    transform: scale(1); /* Adjust scale as needed */
 }
 
 .flame {
@@ -172,11 +177,28 @@ spline-viewer {
     opacity: 0;
 }
 
-#cake-slide button {
-    background-color: var(--cafe-noir); /* Slate Blue */
-    margin-top: 20px;
-    position: relative;
-    z-index: 3; /* Above spline */
+.cake-controls {
+    position: absolute;
+    bottom: 10%; /* Atur posisi vertikal di depan kue dan sedikit di bawah */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3; /* Pastikan di atas spline */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Jarak antar elemen */
+}
+
+#cake-slide .cake-controls p {
+    color: var(--cafe-noir);
+    font-size: 1.1em;
+    margin: 0; /* Hapus margin default p */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); /* Tambah sedikit shadow agar lebih terbaca */
+}
+
+#cake-slide .cake-controls button {
+    background-color: var(--cafe-noir); 
+    color: var(--bone); /* Ganti warna teks tombol agar kontras */
 }
 
 #cake-slide #next-from-cake {
@@ -184,11 +206,10 @@ spline-viewer {
 }
 
 #speech-status {
-    position: relative;
-    z-index: 3; /* Above spline */
     color: var(--cafe-noir);
     font-size: 1.1em;
     margin-top: 10px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .hidden {
