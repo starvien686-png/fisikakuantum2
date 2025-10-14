@@ -79,25 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Cake & Candle Animations ---
-    function animateCandles() {
-        candlesticks.forEach((candlestick, index) => {
-            // Apply initial position for animation
-            candlestick.style.transform = `translateY(-100px) rotate(${Math.random() * 20 - 10}deg)`;
-            candlestick.style.opacity = '0';
-
-            // Animate them falling into place with a slight delay
-            setTimeout(() => {
-                candlestick.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
-                candlestick.style.transform = 'translateY(0) rotate(0deg)';
-                candlestick.style.opacity = '1';
-
-                // After they've "dropped", show the text
-                setTimeout(() => {
-                    candlestick.classList.add('show-text');
-                }, 800); // After the drop animation
-            }, 500 * index); // Stagger the candle drop
-        });
-    }
 
     function extinguishCandles() {
         if (!candlesExtinguished) {
