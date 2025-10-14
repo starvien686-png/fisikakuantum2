@@ -118,7 +118,7 @@ button:hover {
 
 /* Cake Slide */
 #cake-slide {
-    position: relative; /* Needed for absolute positioning of spline-container */
+    position: absolute; /* Needed for absolute positioning of spline-container */
 }
 
 #cake-slide h2 {
@@ -144,37 +144,6 @@ spline-viewer {
     width: 100%;
     height: 100%;
     transform: scale(1.2); /* Adjust scale as needed */
-}
-
-.candles-wrapper {
-    position: absolute;
-    top: 45%; /* Adjust to position on the cake */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    gap: 30px; /* Space between candles */
-    z-index: 2; /* Above the spline model */
-    pointer-events: none; /* Let spline handle its own interactions */
-}
-
-.candlestick {
-    position: relative;
-    width: 20px;
-    height: 60px; /* Adjust height for the candlestick */
-    background-color: var(--red-cherry); /* Candle body color */
-    border-radius: 3px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 5px; /* Space for flame */
-    transition: all 0.5s ease-in-out;
-    transform: translateY(0);
-}
-
-.candlestick.dropped {
-    transform: translateY(100px); /* Simulate dropping down into the cake */
-    opacity: 0;
 }
 
 .flame {
