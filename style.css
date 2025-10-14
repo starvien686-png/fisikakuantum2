@@ -8,19 +8,8 @@
     --red-cherry: crimson; /* Menggunakan crimson sesuai permintaan */
 }
 
-/* Font Import (Alternatif Notera) */
-/* Jika Anda memiliki Notera, gunakan @font-face ini dan ganti URL */
-/*
-@font-face {
-    font-family: 'Notera';
-    src: url('path/to/Notera.woff2') format('woff2'),
-         url('path/to/Notera.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-*/
+/* Font Import */
 /* Alternatif Google Fonts */
-
 body {
     margin: 0;
     font-family: "Indie Flower", cursive;
@@ -47,11 +36,13 @@ body {
     left: 0;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
+    z-index: 1; /* Ensure slides are layered correctly */
 }
 
 .slide.active {
     display: flex;
     opacity: 1;
+    z-index: 2; /* Active slide on top */
 }
 
 /* Buttons General Styling */
@@ -65,7 +56,8 @@ button {
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-family: "Gowun Dodum", sans-serif;
-    color: var(--moss-green);
+    color: var(--kombu-green); /* Changed button text color for better contrast */
+    background-color: var(--tan); /* Default button background */
 }
 
 button:hover {
@@ -95,7 +87,7 @@ button:hover {
     height: 100%;
     overflow: hidden;
     pointer-events: none; /* Allow clicks to pass through */
-    z-index: 100;
+    z-index: 100; /* On top of everything */
 }
 
 .confetti {
@@ -125,26 +117,77 @@ button:hover {
 
 
 /* Cake Slide */
-#cake-slide 
-.cake-slide{
+#cake-slide {
+    position: relative; /* Needed for absolute positioning of spline-container */
+}
+
+#cake-slide h2 {
+    font-family: "Gowun Dodum", sans-serif;
+    font-size: 3em;
+    color: var(--kombu-green);
+    margin-bottom: 20px;
+    position: relative; /* For z-index */
+    z-index: 3; /* Above spline */
+}
+
+.spline-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transform: scale(1.2);
+    z-index: 1; /* Below text and buttons */
+    pointer-events: none; /* Allow interaction with elements behind spline */
+}
+
+spline-viewer {
+    width: 100%;
+    height: 100%;
+    transform: scale(1.2); /* Adjust scale as needed */
+}
+
+.candles-wrapper {
+    position: absolute;
+    top: 45%; /* Adjust to position on the cake */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 30px; /* Space between candles */
+    z-index: 2; /* Above the spline model */
+    pointer-events: none; /* Let spline handle its own interactions */
+}
+
+.candlestick {
+    position: relative;
+    width: 20px;
+    height: 60px; /* Adjust height for the candlestick */
+    background-color: var(--red-cherry); /* Candle body color */
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5px; /* Space for flame */
+    transition: all 0.5s ease-in-out;
+    transform: translateY(0);
+}
+
+.candlestick.dropped {
+    transform: translateY(100px); /* Simulate dropping down into the cake */
+    opacity: 0;
 }
 
 .flame {
-    width: 10px;
-    height: 15px;
+    position: absolute;
+    top: -10px; /* Position above the candlestick */
+    width: 12px;
+    height: 18px;
     background: radial-gradient(circle at 50% 0%, yellow, orange, red);
     border-radius: 50% 50% 0 50%;
     transform: rotate(-45deg);
-    position: absolute;
-    top: -10px;
     box-shadow: 0 0 8px 2px rgba(255, 165, 0, 0.7);
     animation: flicker 0.2s infinite alternate;
+    transition: all 0.5s ease-out;
 }
 
 @keyframes flicker {
@@ -158,16 +201,39 @@ button:hover {
     box-shadow: none;
     transform: rotate(0deg) scale(0.5);
     opacity: 0;
-    transition: all 0.5s ease-out;
+}
+
+.candle-text {
+    position: absolute;
+    bottom: 5px;
+    font-family: "Gowun Dodum", sans-serif;
+    font-size: 1.5em;
+    color: var(--bone);
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.5s ease-in-out;
+}
+
+.candlestick.show-text .candle-text {
+    opacity: 1;
 }
 
 #cake-slide button {
     background-color: var(--cafe-noir); /* Slate Blue */
     margin-top: 20px;
+    position: relative;
+    z-index: 3; /* Above spline */
 }
 
 #cake-slide #next-from-cake {
     background-color: var(--moss-green); 
+}
+
+#speech-status {
+    position: relative;
+    z-index: 3; /* Above spline */
+    color: var(--cafe-noir);
+    font-size: 1.1em;
+    margin-top: 10px;
 }
 
 .hidden {
@@ -181,11 +247,12 @@ button:hover {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background-color: var(--kombu-green); /* Pink */
+    background-color: var(--kombu-green); 
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--cafe-noir);
     max-width: 400px;
+    z-index: 2; /* Ensure envelope is above background */
 }
 
 .envelope-img {
@@ -197,21 +264,8 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.envelope-stamp {
-    position: absolute;
-    top: 50px; /* Adjust based on image */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 3em;
-    z-index: 1;
-    color: #8B4513; /* Brown for stamp icon */
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    padding: 5px;
-}
-
 .envelope-question {
-    font-family: 'Pacifico', cursive;
+    font-family: "Gowun Dodum", sans-serif;
     font-size: 1.8em;
     color: var(--tan);
     margin-top: 15px;
@@ -225,11 +279,11 @@ button:hover {
 }
 
 .btn-yes {
-    background-color: var(--moss-green); /* Green */
+    background-color: var(--moss-green); 
 }
 
 .btn-no {
-    background-color: var(--red-cherry); /* Pink */
+    background-color: var(--red-cherry); 
 }
 
 /* Rejection Slide */
@@ -273,6 +327,7 @@ button:hover {
     align-items: center;
     text-align: center;
     transition: all 0.7s ease-in-out; /* For close letter animation */
+    z-index: 2; /* Ensure card is above sakura */
 }
 
 .card-header {
