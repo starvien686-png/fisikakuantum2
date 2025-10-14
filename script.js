@@ -10,11 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const noButton = document.getElementById('no-button');
     const tryAgainButton = document.getElementById('try-again-button');
     const closeLetterButton = document.getElementById('close-letter-button');
+    const letterCard = document.querySelector('.letter-card');
     const blowCandleButton = document.getElementById('blow-candle-button');
     const nextFromCakeButton = document.getElementById('next-from-cake');
 
     const backgroundMusic = document.getElementById('background-music');
     const youtubeAudioPlayer = document.getElementById('youtube-audio-player');
+    const candlesticks = document.querySelectorAll('.candlestick'); 
     const flames = document.querySelectorAll('.flame');
     const speechStatus = document.getElementById('speech-status');
 
@@ -95,19 +97,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Cake & Candle Animations ---
 
+    function animateCandles() {
+        // Karena hanya ada satu lilin, animasi ini akan berjalan untuk satu lilin
+        // Jika Anda ingin lilin "muncul" tanpa animasi jatuh, Anda bisa menyederhanakan ini.
+        candlesticks.forEach((candlestick, index) => {
+            // Bisa langsung disetel opacity 1 dan transform 0 jika tidak ingin animasi jatuh
+            candlestick.style.transition = 'none'; // Matikan transisi untuk langsung muncul
+            candlestick.style.transform = 'translateY(0) rotate(0deg)';
+            candlestick.style.opacity = '1'; 
+        });
+    }
+        
     function extinguishCandles() {
         if (!candlesExtinguished) {
-            flames.forEach(flame => {
+            flames.forEach(flame => { // Akan bekerja pada satu flame yang ada
                 flame.classList.add('extinguished');
             });
             candlesExtinguished = true;
-            speechStatus.textContent = "Candles extinguished! Make a wish! ✨";
+            speechStatus.textContent = "Candle extinguished! Make a wish! ✨"; // Sesuaikan teks
             nextFromCakeButton.classList.remove('hidden');
             if (recognition) {
-                recognition.stop(); // Stop speech recognition
+                recognition.stop(); 
             }
-            cleanupAudioContext(); // Clean up audio context
-            resumeMusic(); // Resume music after blowing is done
+            cleanupAudioContext(); 
+            resumeMusic(); 
         }
     }
 
@@ -265,7 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeLetterButton.addEventListener('click', () => {
-        const letterCard = document.querySelector('.letter-card');
+        flames.forEach(flame => flame.classList.remove('extinguished'));
+        candlesExtinguished = false;
         letterCard.style.transform = 'scale(0.2) rotate(30deg)';
         letterCard.style.opacity = '0';
         letterCard.style.filter = 'drop-shadow(0 0 0 rgba(0,0,0,0))';
