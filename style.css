@@ -203,20 +203,6 @@ spline-viewer {
     opacity: 0;
 }
 
-.candle-text {
-    position: absolute;
-    bottom: 5px;
-    font-family: "Gowun Dodum", sans-serif;
-    font-size: 1.5em;
-    color: var(--bone);
-    opacity: 0; /* Initially hidden */
-    transition: opacity 0.5s ease-in-out;
-}
-
-.candlestick.show-text .candle-text {
-    opacity: 1;
-}
-
 #cake-slide button {
     background-color: var(--cafe-noir); /* Slate Blue */
     margin-top: 20px;
@@ -265,7 +251,7 @@ spline-viewer {
 }
 
 .envelope-question {
-    font-family: 'Pacifico', cursive;
+    font-family: "Gowun Dodum", sans-serif;
     font-size: 1.8em;
     color: var(--tan);
     margin-top: 15px;
