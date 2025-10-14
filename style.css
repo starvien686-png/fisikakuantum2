@@ -36,11 +36,13 @@ body {
     left: 0;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
+    z-index: 1; /* Ensure slides are layered correctly */
 }
 
 .slide.active {
     display: flex;
     opacity: 1;
+    z-index: 2; /* Active slide on top */
 }
 
 /* Buttons General Styling */
@@ -124,7 +126,8 @@ button:hover {
     font-size: 3em;
     color: var(--kombu-green);
     margin-bottom: 20px;
-    position: relative;
+    position: relative; /* For z-index */
+    z-index: 3; /* Above spline */
 }
 
 .spline-container {
@@ -262,7 +265,7 @@ spline-viewer {
 }
 
 .envelope-question {
-    font-family: "Gowun Dodum", sans-serif;
+    font-family: 'Pacifico', cursive;
     font-size: 1.8em;
     color: var(--tan);
     margin-top: 15px;
