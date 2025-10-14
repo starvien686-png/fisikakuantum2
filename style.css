@@ -117,22 +117,24 @@ button:hover {
 
 
 /* Cake Slide */
+/* Cake Slide */
 #cake-slide {
     position: relative;
-    overflow: hidden; /* Needed for absolute positioning of spline-container */
+    overflow: hidden;
 }
 
+/* Judul "Make a Wish!" di atas kue */
 #cake-slide .cake-title {
     position: absolute;
-    top: 15%; /* Atur posisi vertikal di atas kue */
+    top: 15%; 
     left: 50%;
     transform: translateX(-50%);
     font-family: "Gowun Dodum", sans-serif;
     font-size: 3em;
     color: var(--kombu-green);
-    z-index: 3; /* Pastikan di atas spline */
+    z-index: 3; 
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    margin: 0; /* Hapus margin default h2 */
+    margin: 0;
 }
 
 .spline-container {
@@ -141,27 +143,71 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Below text and buttons */
-    pointer-events: none; /* Allow interaction with elements behind spline */
+    z-index: 1; 
+    pointer-events: none; 
 }
 
 spline-viewer {
     width: 100%;
     height: 100%;
-    transform: scale(1); /* Adjust scale as needed */
+    transform: scale(1.2); 
 }
+
+.candles-wrapper {
+    position: absolute;
+    top: 45%; /* Sesuaikan ini untuk menaikkan/menurunkan posisi lilin secara keseluruhan */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* display: flex;  Hapus ini karena hanya ada satu lilin */
+    /* gap: 30px; Hapus ini */
+    z-index: 2; 
+    pointer-events: none; 
+    /* Tambahkan display flex lagi jika Anda ingin candles-wrapper menjadi container flex untuk satu elemen */
+    display: flex; /* Biarkan flex jika ingin agar bisa di-align-items center */
+    justify-content: center; /* Pusatkan secara horizontal */
+    align-items: center; /* Pusatkan secara vertikal jika candles-wrapper memiliki tinggi tertentu */
+}
+
+.candlestick {
+    position: relative;
+    width: 20px;
+    height: 60px; /* Lebar dan tinggi lilin "virtual" */
+    background-color: transparent; /* PENTING: Jadikan transparan agar body lilin tidak terlihat */
+    border-radius: 3px;
+    box-shadow: none; /* Hapus shadow */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5px; 
+    transition: all 0.5s ease-in-out;
+    transform: translateY(0);
+}
+
+/* Jika Anda ingin menghilangkan body lilin dan hanya menampilkan api,
+   pastikan background-color candlestick adalah transparent. */
+.candlestick.single-candle {
+    /* Anda bisa menyesuaikan ukuran jika perlu, tapi width/height default sudah cukup */
+    /* Pastikan background-color transparan */
+    background-color: transparent; 
+    box-shadow: none;
+    height: 1px; /* Bisa juga disetel sangat kecil jika hanya ingin sebagai anchor untuk api */
+    width: 1px;
+    padding-top: 0; /* Tidak perlu padding-top jika body lilin hilang */
+}
+
 
 .flame {
     position: absolute;
-    top: -10px; /* Position above the candlestick */
-    width: 12px;
-    height: 18px;
+    top: -10px; /* Sesuaikan posisi relatif terhadap candlestick */
+    width: 18px; /* Sedikit lebih besar untuk api tunggal */
+    height: 25px; /* Sedikit lebih besar */
     background: radial-gradient(circle at 50% 0%, yellow, orange, red);
     border-radius: 50% 50% 0 50%;
     transform: rotate(-45deg);
-    box-shadow: 0 0 8px 2px rgba(255, 165, 0, 0.7);
+    box-shadow: 0 0 10px 3px rgba(255, 165, 0, 0.8); /* Lebih terang */
     animation: flicker 0.2s infinite alternate;
     transition: all 0.5s ease-out;
+    z-index: 1; /* Pastikan api di atas "titik" lilin transparan */
 }
 
 @keyframes flicker {
@@ -171,34 +217,36 @@ spline-viewer {
 }
 
 .flame.extinguished {
-    background: #ccc; /* Smoke like color */
+    background: #ccc; 
     box-shadow: none;
     transform: rotate(0deg) scale(0.5);
     opacity: 0;
 }
 
+
+/* Wrapper untuk teks dan tombol di depan kue */
 .cake-controls {
     position: absolute;
-    bottom: 10%; /* Atur posisi vertikal di depan kue dan sedikit di bawah */
+    bottom: 10%; 
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3; /* Pastikan di atas spline */
+    z-index: 3; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px; /* Jarak antar elemen */
+    gap: 10px; 
 }
 
 #cake-slide .cake-controls p {
     color: var(--cafe-noir);
     font-size: 1.1em;
-    margin: 0; /* Hapus margin default p */
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); /* Tambah sedikit shadow agar lebih terbaca */
+    margin: 0; 
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); 
 }
 
 #cake-slide .cake-controls button {
     background-color: var(--cafe-noir); 
-    color: var(--bone); /* Ganti warna teks tombol agar kontras */
+    color: var(--bone); 
 }
 
 #cake-slide #next-from-cake {
@@ -210,10 +258,6 @@ spline-viewer {
     font-size: 1.1em;
     margin-top: 10px;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-.hidden {
-    display: none !important;
 }
 
 /* Envelope Slide */
