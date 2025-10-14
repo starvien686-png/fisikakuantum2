@@ -35,15 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 🎵 Background Music ---
     function playMusic() {
-        if (backgroundMusic.paused) {
-            backgroundMusic.play().catch(e => {
-                console.warn("Autoplay audio blocked:", e);
-            });
+        if (!hasUserInteracted) return; // Jangan mainkan jika belum ada interaksi
+
+        // Coba aktifkan YouTube iframe
+        if (youtubeIframe && youtubeAudioPlayer.style.display === 'none') {
+            // Unmute the YouTube iframe and make it potentially playable
+            // Note: Autoplay with sound is still heavily restricted.
+            // This URL removes 'mute=1' from the iframe's source.
+            const currentSrc = youtubeIframe.src;
+            const newSrc = currentSrc.replace(/mute=1/, 'mute=0');
+            youtubeIframe.src = newSrc;
+            youtubeAudioPlayer.style.display = 'block'; // Bisa juga disembunyikan jika ukuran 0x0
+            console.log("Attempting to play YouTube audio (unmuted).");
         }
-    }
+        
 
     function pauseMusic() {
         backgroundMusic.pause();
+        if (youtubeIframe) {
+            // Mute and pause the YouTube iframe by resetting its source with mute=1
+            const currentSrc = youtubeIframe.src;
+            const newSrc = currentSrc.replace(/mute=0/, 'mute=1'); // Mute it again
+            youtubeIframe.src = newSrc; // Resetting src will stop playback
+            console.log("YouTube audio paused and muted.");
+        }
     }
 
     function resumeMusic() {
