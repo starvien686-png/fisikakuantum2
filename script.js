@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const backgroundMusic = document.getElementById('background-music');
     const youtubeAudioPlayer = document.getElementById('youtube-audio-player');
-    const youtubeIframe = youtubeAudioPlayer.querySelector('iframe'); // Dapatkan iframe
     const flames = document.querySelectorAll('.flame');
-    const candlesticks = document.querySelectorAll('.candlestick');
     const speechStatus = document.getElementById('speech-status');
 
     let currentSlide = splashSlide;
@@ -25,9 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBlowingEnabled = false;
     let candlesExtinguished = false;
     let audioContext; // Declare globally for cleanup
-    let mediaStreamSource; // To store the microphone stream source
-    let scriptProcessor; // To store the ScriptProcessorNode
-    let hasUserInteracted = false; // Flag untuk melacak interaksi pengguna
 
     // --- Slide Management ---
     function showSlide(slideToShow) {
@@ -38,49 +33,42 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSlide = slideToShow;
     }
 
-    // --- 🎵 Background Music ---
+    // --- 🎵 Background Music (Universal Version) ---
     function playMusic() {
-        if (!hasUserInteracted) return; // Jangan mainkan jika belum ada interaksi
-
-        // Coba aktifkan YouTube iframe
-        if (youtubeIframe && youtubeAudioPlayer.style.display === 'none') {
-            // Unmute the YouTube iframe and make it potentially playable
-            // Note: Autoplay with sound is still heavily restricted.
-            // This URL removes 'mute=1' from the iframe's source.
-            const currentSrc = youtubeIframe.src;
-            const newSrc = currentSrc.replace(/mute=1/, 'mute=0');
-            youtubeIframe.src = newSrc;
-            youtubeAudioPlayer.style.display = 'block'; // Bisa juga disembunyikan jika ukuran 0x0
-            console.log("Attempting to play YouTube audio (unmuted).");
-        }
-        
-        // Fallback untuk audio tag jika YouTube tidak berfungsi (pastikan audio tag punya src yang valid)
         if (backgroundMusic.paused) {
+            backgroundMusic.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y";
             backgroundMusic.play().catch(e => {
-                console.warn("Autoplay audio tag blocked:", e);
+                console.warn("Autoplay audio blocked, trying YouTube iframe:", e);
+                // If audio tag fails, try to un-mute/play iframe
+                const iframe = youtubeAudioPlayer.querySelector('iframe');
+                if (iframe) {
+                    iframe.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=1&loop=1&playlist=vNCDAvLxy_Y&controls=0"; // Remove mute=1
+                    youtubeAudioPlayer.style.display = 'block'; // Make iframe visible if needed
+                }
             });
         }
     }
 
     function pauseMusic() {
         backgroundMusic.pause();
-        if (youtubeIframe) {
-            // Mute and pause the YouTube iframe by resetting its source with mute=1
-            const currentSrc = youtubeIframe.src;
-            const newSrc = currentSrc.replace(/mute=0/, 'mute=1'); // Mute it again
-            youtubeIframe.src = newSrc; // Resetting src will stop playback
-            console.log("YouTube audio paused and muted.");
+        const iframe = youtubeAudioPlayer.querySelector('iframe');
+        if (iframe) {
+            // This stops YouTube iframe by effectively resetting its source
+            // A more robust way would be using YouTube Iframe API to pause
+            iframe.src = "https://www.youtube.com/embed/vNCDAvLxy_Y?autoplay=0&loop=1&playlist=vNCDAvLxy_Y&controls=0&mute=1";
         }
     }
 
     function resumeMusic() {
-        playMusic(); 
+        playMusic(); // Simply call playMusic, it will handle if already playing
     }
+
 
     // --- Confetti Animation ---
     function createConfetti() {
         const confettiContainer = document.querySelector('.confetti-container');
-        confettiContainer.innerHTML = ''; // Clear previous confetti
+        // Clear previous confetti
+        confettiContainer.innerHTML = '';
 
         const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f', '#FF69B4', '#FFA500'];
         const shapes = ['square', 'circle', 'triangle'];
@@ -96,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             if (randomShape === 'triangle') {
-                 confetti.style.borderBottomColor = randomColor; 
+                 confetti.style.borderBottomColor = randomColor; // Set border color for triangle
             } else {
                  confetti.style.backgroundColor = randomColor;
             }
@@ -104,22 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
     // --- Cake & Candle Animations ---
-    function animateCandles() {
-        candlesticks.forEach((candlestick, index) => {
-            candlestick.style.transform = `translateY(-100px) rotate(${Math.random() * 20 - 10}deg)`;
-            candlestick.style.opacity = '0';
-
-            setTimeout(() => {
-                candlestick.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
-                candlestick.style.transform = 'translateY(0) rotate(0deg)';
-                candlestick.style.opacity = '1';
-
-                setTimeout(() => {
-                    candlestick.classList.add('show-text');
-                }, 800); 
-            }, 500 * index); 
+    function animateCakeLayers() {
+        const layers = document.querySelectorAll('.cake-layer, .cake-cream');
+        layers.forEach(layer => {
+            layer.style.animationPlayState = 'running';
         });
+
+        // Add '2' and '0' text to candles after they drop
+        const candle2 = document.querySelector('.candle-2');
+        const candle0 = document.querySelector('.candle-0');
+        setTimeout(() => {
+            candle2.classList.add('show-text'); // If you add CSS for .show-text
+            candle0.classList.add('show-text');
+        }, 2800); // After both candles should have dropped (2s delay + some buffer)
     }
 
     function extinguishCandles() {
@@ -131,28 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
             speechStatus.textContent = "Candles extinguished! Make a wish! ✨";
             nextFromCakeButton.classList.remove('hidden');
             if (recognition) {
-                recognition.stop(); 
+                recognition.stop();
             }
-            cleanupAudioContext(); 
-            resumeMusic(); 
-        }
-    }
-
-    function cleanupAudioContext() {
-        if (scriptProcessor) {
-            scriptProcessor.disconnect();
-            scriptProcessor.onaudioprocess = null;
-            scriptProcessor = null;
-        }
-        if (mediaStreamSource) {
-            mediaStreamSource.disconnect();
-            mediaStreamSource = null;
-        }
-        if (audioContext) {
-            audioContext.close().then(() => {
+            if (audioContext) { // Cleanup audio context immediately after candles are out
+                audioContext.close();
                 audioContext = null;
-                console.log("AudioContext closed.");
-            }).catch(e => console.error("Error closing AudioContext:", e));
+            }
+            resumeMusic(); // Resume music after blowing is done
         }
     }
 
@@ -164,35 +136,38 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        pauseMusic(); 
+        pauseMusic(); // Pause music when blowing starts
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
         recognition.continuous = true;
-        recognition.interimResults = true; 
+        recognition.interimResults = true; // Get results as they come in
         recognition.lang = 'en-US';
 
+        let microphone;
         let analyser;
-        
+        let javascriptNode;
+
         recognition.onstart = () => {
             speechStatus.textContent = "Listening for a blow... 🌬️ (Grant microphone permission)";
             isBlowingEnabled = true;
 
+            // Initialize AudioContext to monitor volume
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 navigator.mediaDevices.getUserMedia({ audio: true })
                     .then(stream => {
-                        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+                        microphone = audioContext.createMediaStreamSource(stream);
                         analyser = audioContext.createAnalyser();
                         analyser.smoothingTimeConstant = 0.3;
                         analyser.fftSize = 1024;
-                        mediaStreamSource.connect(analyser);
+                        microphone.connect(analyser);
 
-                        scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
-                        analyser.connect(scriptProcessor);
-                        scriptProcessor.connect(audioContext.destination);
+                        javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+                        analyser.connect(javascriptNode);
+                        javascriptNode.connect(audioContext.destination);
 
-                        scriptProcessor.onaudioprocess = () => {
+                        javascriptNode.onaudioprocess = () => {
                             if (!isBlowingEnabled || candlesExtinguished) return;
 
                             const array = new Uint8Array(analyser.frequencyBinCount);
@@ -203,7 +178,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             const average = sum / array.length;
 
-                            const BLOW_THRESHOLD = 70; 
+                            // console.log("Average volume:", average); // For debugging volume levels
+
+                            const BLOW_THRESHOLD = 60; // Adjust this value based on testing
                             if (average > BLOW_THRESHOLD) {
                                 extinguishCandles();
                             }
@@ -211,22 +188,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch(err => {
                         speechStatus.textContent = "Microphone access denied or error: " + err.message;
-                        blowCandleButton.disabled = false; 
+                        blowCandleButton.disabled = false; // Allow retrying
                         blowCandleButton.textContent = "Enable Blowing";
                         isBlowingEnabled = false;
-                        cleanupAudioContext(); 
-                        resumeMusic(); 
+                        if (audioContext) audioContext.close(); // Clean up on error
+                        resumeMusic(); // Resume music if microphone access fails
                     });
             } catch (e) {
                 speechStatus.textContent = "Web Audio API not supported in this browser.";
                 blowCandleButton.disabled = true;
                 isBlowingEnabled = false;
-                resumeMusic(); 
+                resumeMusic(); // Resume music if Web Audio API fails
             }
         };
 
         recognition.onresult = (event) => {
-            // Tidak perlu implementasi untuk kasus ini
+            // We're primarily using the audio stream, not speech-to-text here
         };
 
         recognition.onerror = (event) => {
@@ -235,19 +212,23 @@ document.addEventListener('DOMContentLoaded', () => {
             isBlowingEnabled = false;
             blowCandleButton.disabled = false;
             blowCandleButton.textContent = "Enable Blowing";
-            cleanupAudioContext();
-            resumeMusic(); 
+            if (audioContext) audioContext.close();
+            audioContext = null;
+            resumeMusic(); // Resume music on recognition error
         };
 
         recognition.onend = () => {
-            if (!candlesExtinguished) { 
+            if (!candlesExtinguished) { // If recognition ended but candles are not out
                 speechStatus.textContent = "Listening stopped. Try again?";
                 blowCandleButton.textContent = "Enable Blowing";
                 blowCandleButton.disabled = false;
             }
             isBlowingEnabled = false;
-            cleanupAudioContext(); 
-            if (!candlesExtinguished) { 
+            if (audioContext) { // Ensure audio context is closed if not already
+                audioContext.close();
+                audioContext = null;
+            }
+            if (!candlesExtinguished) { // Only resume if blowing didn't succeed
                 resumeMusic();
             }
         };
@@ -259,11 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     startButton.addEventListener('click', () => {
-        hasUserInteracted = true; // Set flag interaksi pengguna
         showSlide(cakeSlide);
         createConfetti();
-        playMusic(); 
-        animateCandles();
+        // Play music immediately on start button click
+        playMusic();
+        animateCakeLayers();
     });
 
     blowCandleButton.addEventListener('click', () => {
@@ -296,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             showSlide(splashSlide);
+            // Reset for next interaction
             letterCard.style.transform = 'scale(1) rotate(0deg)';
             letterCard.style.opacity = '1';
             letterCard.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))';
