@@ -120,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+        
     // --- Web Speech API for Candle Blowing ---
     function enableSpeechRecognition() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
