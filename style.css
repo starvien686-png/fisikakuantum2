@@ -173,7 +173,7 @@ spline-viewer {
 }
 
 .flame {
-    width: 10px;
+    width: 15px;
     height: 15px;
     background: radial-gradient(circle at 50% 0%, yellow, orange, red);
     border-radius: 50% 50% 0 50%;
@@ -200,7 +200,7 @@ spline-viewer {
 
 #cake-slide button {
     background-color: var(--cafe-noir); /* Slate Blue */
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 #cake-slide #next-from-cake {
