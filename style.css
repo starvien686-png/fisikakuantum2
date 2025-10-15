@@ -86,6 +86,7 @@ button:hover {
     background-color: var(--bone);
 }
 
+
 /* Confetti Effect */
 .confetti-container {
     position: absolute;
