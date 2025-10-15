@@ -83,7 +83,7 @@ button:hover {
 }
 
 #splash-slide #start-button {
-    background-color: var(--moss-green);
+    background-color: var(--tan);
 }
 
 /* Confetti Effect */
@@ -163,7 +163,7 @@ spline-viewer {
 
 .candles-wrapper {
     position: absolute;
-    top: 45%; 
+    top: 50%; 
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -199,8 +199,8 @@ spline-viewer {
 }
 
 #cake-slide button {
-    background-color: var(--cafe-noir); /* Slate Blue */
-    margin-top: 10px;
+    background-color: var(--kombu-green); /* Slate Blue */
+    margin-top: 70px;
 }
 
 #cake-slide #next-from-cake {
