@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const noButton = document.getElementById('no-button');
     const tryAgainButton = document.getElementById('try-again-button');
     const closeLetterButton = document.getElementById('close-letter-button');
-    const letterCard = document.querySelector('.letter-card');
     const blowCandleButton = document.getElementById('blow-candle-button');
     const nextFromCakeButton = document.getElementById('next-from-cake');
 
     const backgroundMusic = document.getElementById('background-music');
     const youtubeAudioPlayer = document.getElementById('youtube-audio-player');
-    const candlesticks = document.querySelectorAll('.candlestick'); 
+    const youtubeIframe = youtubeAudioPlayer.querySelector('iframe'); // Dapatkan iframe
     const flames = document.querySelectorAll('.flame');
+    const candlesticks = document.querySelectorAll('.candlestick');
     const speechStatus = document.getElementById('speech-status');
 
     let currentSlide = splashSlide;
@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let isBlowingEnabled = false;
     let candlesExtinguished = false;
     let audioContext; // Declare globally for cleanup
+    let mediaStreamSource; // To store the microphone stream source
+    let scriptProcessor; // To store the ScriptProcessorNode
+    let hasUserInteracted = false; // Flag untuk melacak interaksi pengguna
 
     // --- Slide Management ---
     function showSlide(slideToShow) {
@@ -51,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Attempting to play YouTube audio (unmuted).");
         }
         
+        // Fallback untuk audio tag jika YouTube tidak berfungsi (pastikan audio tag punya src yang valid)
+        if (backgroundMusic.paused) {
+            backgroundMusic.play().catch(e => {
+                console.warn("Autoplay audio tag blocked:", e);
+            });
+        }
+    }
 
     function pauseMusic() {
         backgroundMusic.pause();
@@ -70,8 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Confetti Animation ---
     function createConfetti() {
         const confettiContainer = document.querySelector('.confetti-container');
-        // Clear previous confetti
-        confettiContainer.innerHTML = '';
+        confettiContainer.innerHTML = ''; // Clear previous confetti
 
         const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f', '#FF69B4', '#FFA500'];
         const shapes = ['square', 'circle', 'triangle'];
@@ -87,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             if (randomShape === 'triangle') {
-                 confetti.style.borderBottomColor = randomColor; // Set border color for triangle
+                 confetti.style.borderBottomColor = randomColor; 
             } else {
                  confetti.style.backgroundColor = randomColor;
             }
@@ -96,25 +105,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Cake & Candle Animations ---
-
     function animateCandles() {
-        // Karena hanya ada satu lilin, animasi ini akan berjalan untuk satu lilin
-        // Jika Anda ingin lilin "muncul" tanpa animasi jatuh, Anda bisa menyederhanakan ini.
         candlesticks.forEach((candlestick, index) => {
-            // Bisa langsung disetel opacity 1 dan transform 0 jika tidak ingin animasi jatuh
-            candlestick.style.transition = 'none'; // Matikan transisi untuk langsung muncul
-            candlestick.style.transform = 'translateY(0) rotate(0deg)';
-            candlestick.style.opacity = '1'; 
+            candlestick.style.transform = `translateY(-100px) rotate(${Math.random() * 20 - 10}deg)`;
+            candlestick.style.opacity = '0';
+
+            setTimeout(() => {
+                candlestick.style.transition = 'transform 0.8s ease-out, opacity 0.8s ease-out';
+                candlestick.style.transform = 'translateY(0) rotate(0deg)';
+                candlestick.style.opacity = '1';
+
+                setTimeout(() => {
+                    candlestick.classList.add('show-text');
+                }, 800); 
+            }, 500 * index); 
         });
     }
-        
+
     function extinguishCandles() {
         if (!candlesExtinguished) {
-            flames.forEach(flame => { // Akan bekerja pada satu flame yang ada
+            flames.forEach(flame => {
                 flame.classList.add('extinguished');
             });
             candlesExtinguished = true;
-            speechStatus.textContent = "Candle extinguished! Make a wish! ✨"; // Sesuaikan teks
+            speechStatus.textContent = "Candles extinguished! Make a wish! ✨";
             nextFromCakeButton.classList.remove('hidden');
             if (recognition) {
                 recognition.stop(); 
@@ -150,12 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        pauseMusic(); // Pause music when blowing starts
+        pauseMusic(); 
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
         recognition.continuous = true;
-        recognition.interimResults = true; // Get results as they come in
+        recognition.interimResults = true; 
         recognition.lang = 'en-US';
 
         let analyser;
@@ -164,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
             speechStatus.textContent = "Listening for a blow... 🌬️ (Grant microphone permission)";
             isBlowingEnabled = true;
 
-            // Initialize AudioContext to monitor volume
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 navigator.mediaDevices.getUserMedia({ audio: true })
@@ -190,9 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             const average = sum / array.length;
 
-                            // console.log("Average volume:", average); // For debugging volume levels
-
-                            const BLOW_THRESHOLD = 70; // Adjust this value based on testing
+                            const BLOW_THRESHOLD = 70; 
                             if (average > BLOW_THRESHOLD) {
                                 extinguishCandles();
                             }
@@ -200,23 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch(err => {
                         speechStatus.textContent = "Microphone access denied or error: " + err.message;
-                        blowCandleButton.disabled = false; // Allow retrying
+                        blowCandleButton.disabled = false; 
                         blowCandleButton.textContent = "Enable Blowing";
                         isBlowingEnabled = false;
-                        cleanupAudioContext(); // Clean up on error
-                        resumeMusic(); // Resume music if microphone access fails
+                        cleanupAudioContext(); 
+                        resumeMusic(); 
                     });
             } catch (e) {
                 speechStatus.textContent = "Web Audio API not supported in this browser.";
                 blowCandleButton.disabled = true;
                 isBlowingEnabled = false;
-                resumeMusic(); // Resume music if Web Audio API fails
+                resumeMusic(); 
             }
         };
 
         recognition.onresult = (event) => {
-            // We're primarily using the audio stream, not speech-to-text here
-            // You can add speech interpretation if needed, e.g., for "blow" command
+            // Tidak perlu implementasi untuk kasus ini
         };
 
         recognition.onerror = (event) => {
@@ -226,18 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
             blowCandleButton.disabled = false;
             blowCandleButton.textContent = "Enable Blowing";
             cleanupAudioContext();
-            resumeMusic(); // Resume music on recognition error
+            resumeMusic(); 
         };
 
         recognition.onend = () => {
-            if (!candlesExtinguished) { // If recognition ended but candles are not out
+            if (!candlesExtinguished) { 
                 speechStatus.textContent = "Listening stopped. Try again?";
                 blowCandleButton.textContent = "Enable Blowing";
                 blowCandleButton.disabled = false;
             }
             isBlowingEnabled = false;
-            cleanupAudioContext(); // Ensure audio context is closed if not already
-            if (!candlesExtinguished) { // Only resume if blowing didn't succeed
+            cleanupAudioContext(); 
+            if (!candlesExtinguished) { 
                 resumeMusic();
             }
         };
@@ -249,9 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
     startButton.addEventListener('click', () => {
+        hasUserInteracted = true; // Set flag interaksi pengguna
         showSlide(cakeSlide);
         createConfetti();
-        playMusic(); // Play music immediately on start button click
+        playMusic(); 
         animateCandles();
     });
 
@@ -278,21 +289,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeLetterButton.addEventListener('click', () => {
-        flames.forEach(flame => flame.classList.remove('extinguished'));
-        candlesExtinguished = false;
+        const letterCard = document.querySelector('.letter-card');
         letterCard.style.transform = 'scale(0.2) rotate(30deg)';
         letterCard.style.opacity = '0';
         letterCard.style.filter = 'drop-shadow(0 0 0 rgba(0,0,0,0))';
 
         setTimeout(() => {
             showSlide(splashSlide);
-            // Reset for next interaction
             letterCard.style.transform = 'scale(1) rotate(0deg)';
             letterCard.style.opacity = '1';
             letterCard.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))';
 
             flames.forEach(flame => flame.classList.remove('extinguished'));
-            candlesticks.forEach(candlestick => candlestick.classList.remove('show-text'));
             candlesExtinguished = false;
             nextFromCakeButton.classList.add('hidden');
             speechStatus.textContent = "";
@@ -312,6 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
     createConfetti(); // Create confetti once on initial load
 
     // Add event listener for user interaction to attempt playing music
+    // This is a common workaround for browser autoplay policies
     document.body.addEventListener('click', playMusic, { once: true });
     startButton.addEventListener('click', playMusic, { once: true });
+
+
 });
