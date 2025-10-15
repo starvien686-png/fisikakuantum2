@@ -100,11 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
             layer.style.animationPlayState = 'running';
         });
 
-        const candle0 = document.querySelector('.candle-0');
-        setTimeout(() => {
-            candle0.classList.add('show-text');
-        }, 2800); // After both candles should have dropped (2s delay + some buffer)
-    }
 
     function extinguishCandles() {
         if (!candlesExtinguished) {
