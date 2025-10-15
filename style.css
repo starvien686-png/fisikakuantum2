@@ -200,7 +200,7 @@ spline-viewer {
 
 #cake-slide button {
     background-color: var(--kombu-green); /* Slate Blue */
-    margin-top: 70px;
+    margin-top: 10px;
 }
 
 #cake-slide #next-from-cake {
