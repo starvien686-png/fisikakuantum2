@@ -8,7 +8,19 @@
     --red-cherry: crimson; /* Menggunakan crimson sesuai permintaan */
 }
 
-/* Font Import */
+/* Font Import (Alternatif Notera) */
+/* Jika Anda memiliki Notera, gunakan @font-face ini dan ganti URL */
+/*
+@font-face {
+    font-family: 'Notera';
+    src: url('path/to/Notera.woff2') format('woff2'),
+         url('path/to/Notera.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+*/
+/* Alternatif Google Fonts */
+
 body {
     margin: 0;
     font-family: "Indie Flower", cursive;
@@ -35,13 +47,11 @@ body {
     left: 0;
     transition: opacity 0.5s ease-in-out;
     opacity: 0;
-    z-index: 1; /* Ensure slides are layered correctly */
 }
 
 .slide.active {
     display: flex;
     opacity: 1;
-    z-index: 2; /* Active slide on top */
 }
 
 /* Buttons General Styling */
@@ -55,8 +65,7 @@ button {
     transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     font-family: "Gowun Dodum", sans-serif;
-    color: var(--kombu-green); 
-    background-color: var(--tan); 
+    color: var(--moss-green);
 }
 
 button:hover {
@@ -74,7 +83,7 @@ button:hover {
 }
 
 #splash-slide #start-button {
-    background-color: var(--tan);
+    background-color: var(--moss-green);
 }
 
 /* Confetti Effect */
@@ -85,8 +94,8 @@ button:hover {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    pointer-events: none; 
-    z-index: 100; 
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 100;
 }
 
 .confetti {
@@ -116,85 +125,26 @@ button:hover {
 
 
 /* Cake Slide */
-#cake-slide {
-    position: relative;
-    overflow: hidden; /* Penting untuk mengelola penempatan elemen */
-    /* Menghilangkan properti flex dari cake-slide itu sendiri */
-    /* display: flex; flex-direction: column; justify-content: center; align-items: center; */
-}
-
-/* Judul "Make a Wish!" di atas kue */
-#cake-slide .cake-title {
-    position: absolute;
-    top: 15%; /* Atur posisi vertikal di atas kue */
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: "Gowun Dodum", sans-serif;
-    font-size: 3em;
-    color: var(--kombu-green);
-    z-index: 3; /* Pastikan di atas spline */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    margin: 0; /* Hapus margin default h2 */
-}
-
-.spline-container {
+#cake-slide 
+.background{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Di bawah teks dan tombol */
-    pointer-events: none; /* Izinkan interaksi dengan elemen di belakang spline */
-}
-
-spline-viewer {
-    width: 100%;
-    height: 100%;
-    transform: scale(1.2); 
-}
-
-.candles-wrapper {
-    position: absolute;
-    top: 45%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    gap: 30px; 
-    z-index: 2; /* Di atas model spline */
-    pointer-events: none; 
-}
-
-.candlestick {
-    position: relative;
-    width: 20px;
-    height: 60px; 
-    background-color: var(--red-cherry); 
-    border-radius: 3px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 5px; 
-    transition: all 0.5s ease-in-out;
-    transform: translateY(0);
-}
-
-.candlestick.dropped {
-    transform: translateY(100px); 
-    opacity: 0;
+    transform: scale(3);
 }
 
 .flame {
-    position: absolute;
-    top: -10px; 
-    width: 12px;
-    height: 18px;
+    width: 10px;
+    height: 15px;
     background: radial-gradient(circle at 50% 0%, yellow, orange, red);
     border-radius: 50% 50% 0 50%;
     transform: rotate(-45deg);
+    position: absolute;
+    top: -10px;
     box-shadow: 0 0 8px 2px rgba(255, 165, 0, 0.7);
     animation: flicker 0.2s infinite alternate;
-    transition: all 0.5s ease-out;
 }
 
 @keyframes flicker {
@@ -204,60 +154,20 @@ spline-viewer {
 }
 
 .flame.extinguished {
-    background: #ccc; 
+    background: #ccc; /* Smoke like color */
     box-shadow: none;
     transform: rotate(0deg) scale(0.5);
     opacity: 0;
+    transition: all 0.5s ease-out;
 }
 
-.candle-text {
-    position: absolute;
-    bottom: 5px;
-    font-family: "Gowun Dodum", sans-serif;
-    font-size: 1.5em;
-    color: var(--bone);
-    opacity: 0; 
-    transition: opacity 0.5s ease-in-out;
-}
-
-.candlestick.show-text .candle-text {
-    opacity: 1;
-}
-
-/* Wrapper untuk teks dan tombol di depan kue */
-.cake-controls {
-    position: absolute;
-    bottom: 10%; /* Atur posisi vertikal di depan kue dan sedikit di bawah */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3; /* Pastikan di atas spline */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px; /* Jarak antar elemen */
-}
-
-#cake-slide .cake-controls p {
-    color: var(--cafe-noir);
-    font-size: 1.1em;
-    margin: 0; /* Hapus margin default p */
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); /* Tambah sedikit shadow agar lebih terbaca */
-}
-
-#cake-slide .cake-controls button {
-    background-color: var(--cafe-noir); 
-    color: var(--bone); /* Ganti warna teks tombol agar kontras */
+#cake-slide button {
+    background-color: var(--cafe-noir); /* Slate Blue */
+    margin-top: 20px;
 }
 
 #cake-slide #next-from-cake {
     background-color: var(--moss-green); 
-}
-
-#speech-status {
-    color: var(--cafe-noir);
-    font-size: 1.1em;
-    margin-top: 10px;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .hidden {
@@ -271,21 +181,33 @@ spline-viewer {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background-color: var(--kombu-green); 
+    background-color: var(--kombu-green); /* Pink */
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--cafe-noir);
     max-width: 400px;
-    z-index: 2; 
 }
 
 .envelope-img {
     width: 100%;
     height: auto;
-    max-width: 250px; 
+    max-width: 250px; /* Adjust as needed */
     margin-bottom: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.envelope-stamp {
+    position: absolute;
+    top: 50px; /* Adjust based on image */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3em;
+    z-index: 1;
+    color: #8B4513; /* Brown for stamp icon */
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    padding: 5px;
 }
 
 .envelope-question {
@@ -303,11 +225,11 @@ spline-viewer {
 }
 
 .btn-yes {
-    background-color: var(--moss-green); 
+    background-color: var(--moss-green); /* Green */
 }
 
 .btn-no {
-    background-color: var(--red-cherry); 
+    background-color: var(--red-cherry); /* Pink */
 }
 
 /* Rejection Slide */
@@ -350,8 +272,7 @@ spline-viewer {
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    transition: all 0.7s ease-in-out; 
-    z-index: 2; 
+    transition: all 0.7s ease-in-out; /* For close letter animation */
 }
 
 .card-header {
@@ -367,11 +288,11 @@ spline-viewer {
     display: inline-block;
 }
 
-.cherry-blossom { color: #FFB6C1; } 
-.rose { color: #FF69B4; } 
+.cherry-blossom { color: #FFB6C1; } /* Light Pink */
+.rose { color: #FF69B4; } /* Hot Pink */
 .cute-animation {
     font-size: 2em;
-    color: #FFD700; 
+    color: #FFD700; /* Gold */
     animation: sparkle 1.5s infinite alternate;
 }
 
