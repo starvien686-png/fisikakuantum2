@@ -100,11 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
             layer.style.animationPlayState = 'running';
         });
 
-        // Add '2' and '0' text to candles after they drop
-        const candle2 = document.querySelector('.candle-2');
         const candle0 = document.querySelector('.candle-0');
         setTimeout(() => {
-            candle2.classList.add('show-text'); // If you add CSS for .show-text
             candle0.classList.add('show-text');
         }, 2800); // After both candles should have dropped (2s delay + some buffer)
     }
