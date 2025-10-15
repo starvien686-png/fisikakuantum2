@@ -125,14 +125,51 @@ button:hover {
 
 
 /* Cake Slide */
-#cake-slide 
-.background{
+#cake-slide {
+    position: relative;
+    overflow: hidden; /* Penting untuk mengelola penempatan elemen */
+    /* Menghilangkan properti flex dari cake-slide itu sendiri */
+    /* display: flex; flex-direction: column; justify-content: center; align-items: center; */
+}
+
+#cake-slide .cake-title {
+    position: absolute;
+    top: 15%; /* Atur posisi vertikal di atas kue */
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Gowun Dodum", sans-serif;
+    font-size: 3em;
+    color: var(--kombu-green);
+    z-index: 3; /* Pastikan di atas spline */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    margin: 0;
+}
+
+.spline-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transform: scale(3);
+    z-index: 1; /* Di bawah teks dan tombol */
+    pointer-events: none; /* Izinkan interaksi dengan elemen di belakang spline */
+}
+
+spline-viewer {
+    width: 100%;
+    height: 100%;
+    transform: scale(1.2); 
+}
+
+.candles-wrapper {
+    position: absolute;
+    top: 45%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 30px; 
+    z-index: 2; /* Di atas model spline */
+    pointer-events: none; 
 }
 
 .flame {
