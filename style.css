@@ -30,7 +30,7 @@ body {
     align-items: center;
     min-height: 100vh;
     overflow: hidden; /* Hide overflow for confetti and animations */
-    color: var(--cafe-noir);
+    color: var(--moss-green);
     text-align: center;
 }
 
@@ -83,7 +83,7 @@ button:hover {
 }
 
 #splash-slide #start-button {
-    background-color: var(--moss-green);
+    background-color: var(--bone);
 }
 
 /* Confetti Effect */
@@ -123,7 +123,6 @@ button:hover {
     }
 }
 
-
 /* Cake Slide */
 #cake-slide {
     position: relative;
@@ -142,7 +141,7 @@ button:hover {
     color: var(--kombu-green);
     z-index: 3; /* Pastikan di atas spline */
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    margin: 0;
+    margin: 0; /* Hapus margin default h2 */
 }
 
 .spline-container {
@@ -200,7 +199,7 @@ spline-viewer {
 
 #cake-slide button {
     background-color: var(--kombu-green); /* Slate Blue */
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 #cake-slide #next-from-cake {
